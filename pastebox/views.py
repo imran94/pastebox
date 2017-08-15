@@ -5,7 +5,8 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import datetime
-from random import randint
+from random import randint, choice
+from string import ascii_lowercase, ascii_uppercase
 
 from .models import Post
 
@@ -44,22 +45,30 @@ def detail(request, post_url):
 
 def save(request):
 	#Generate unique URL for new post
+	customURL = ''		
+
 	while True:
-		
-		customURL = ""		
 		for i in range(0,6):
-			customURL += str(randint(0,9))
-		# existingURL = Post.objects.get(customURL)
+			n = randint(0,2)
+			if n == 0:
+				customURL += str(randint(0,9))
+			elif n == 1:
+				customURL += choice(ascii_uppercase)
+			else:
+				customURL += choice(ascii_lowercase)
+
+		url_already_exists = Post.objects.filter(url=customURL)
 		
-		# if not existingURL:
-		break
+		if url_already_exists.count() == 0:
+			break
+		else:
+			customURL = ''
 
 	p = Post(
 		name = request.POST['name'], 
 		content = request.POST['content'], 
 		url = customURL
 	)	
-
 
 	if (request.POST['date']):
 		p.date = request.POST['date']
