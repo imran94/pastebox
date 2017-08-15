@@ -11,6 +11,8 @@ from string import ascii_lowercase, ascii_uppercase
 from .models import Post
 
 def index(request):
+	print(request.META['HTTP_HOST'])
+
 	# Delete any existing posts if they are past expiry
 	for p in Post.objects.all():
 		if p.date and p.date <= datetime.date.today():
@@ -73,9 +75,6 @@ def save(request):
 	if (request.POST['date']):
 		p.date = request.POST['date']
 	p.save()	
-	# return render(request, 'pastebox/detail.html', {
-	# 	'post': p,
-	# })
 	return HttpResponseRedirect(reverse('pastebox:detail', args=(p.url,)))	
 
 def delete(request, post_url):
@@ -90,7 +89,18 @@ def search(request):
 		Q(name__icontains=search_term) | 
 		Q(content__icontains=search_term) 
 	)
-	print(search_results)
 
-	context = { 'search_term' : search_term, 'search_results' : search_results}
+	# Divide posts into pages of 10 
+	page = request.GET.get('page', 1)
+
+	paginator = Paginator(search_results, 10)
+	result_count = search_results.count
+	try:
+		search_results = paginator.page(page)
+	except PageNotAnInteger:
+		search_results = paginator.page(1)
+	except EmptyPage:
+		search_results = paginator.page(paginator.num_pages)
+
+	context = { 'search_term' : search_term, 'search_results' : search_results, 'result_count' : result_count}
 	return render(request, 'pastebox/search.html', context)

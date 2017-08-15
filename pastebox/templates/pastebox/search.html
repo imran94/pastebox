@@ -6,7 +6,7 @@
 	</p>
 </form>
 
-Results found: {{search_results.count}}
+Results found: {{result_count}}
 
 {% for post in search_results %}
 	<p>
@@ -17,3 +17,21 @@ Results found: {{search_results.count}}
 		{{post.content}}
 	</p>	
 {% endfor %}
+
+{% if search_results.has_other_pages %}
+	{% if search_results.has_previous %}
+		<a href="?page={{search_results.previous_page_number}}">&laquo;</a>
+	{% endif %}
+	
+	{% for i in search_results.paginator.page_range %}
+		{% if search_results.number == i %}
+			{{i}}
+		{% else %}
+			<a href="?page={{i}}">{{i}}</a>
+		{% endif %}
+	{% endfor %}
+
+	{% if search_results.has_next %}
+		<a href="?page={{search_results.next_page_number}}">&raquo;</a>
+	{% endif %}
+{% endif %}
