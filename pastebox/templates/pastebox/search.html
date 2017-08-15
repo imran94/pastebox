@@ -1,37 +1,44 @@
-<h3>Search</h3>
-<form action="{% url 'pastebox:search' %}" method="get">
-	<p>
-		<input type="text" name="searchbox" value={{ search_term }} required>
-		<input type="submit" />
-	</p>
-</form>
+<head>
+	<title>Pastebox: Search</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 
-Results found: {{result_count}}
+<body>
+	<h3>Search</h3>
+	<form action="{% url 'pastebox:search' %}" method="get">
+		<p>
+			<input type="text" name="searchbox" value={{ search_term }} required>
+			<input type="submit" />
+		</p>
+	</form>
 
-{% for post in search_results %}
-	<p>
-		<a href={% url 'pastebox:detail' post.url %}> {{post.name}} </a>
-		<br>
-		Date of expiry: {{post.date}}
-		<br>
-		{{post.content}}
-	</p>	
-{% endfor %}
+	Results found: {{result_count}}
 
-{% if search_results.has_other_pages %}
-	{% if search_results.has_previous %}
-		<a href="?page={{search_results.previous_page_number}}">&laquo;</a>
-	{% endif %}
-	
-	{% for i in search_results.paginator.page_range %}
-		{% if search_results.number == i %}
-			{{i}}
-		{% else %}
-			<a href="?page={{i}}">{{i}}</a>
-		{% endif %}
+	{% for post in search_results %}
+		<p>
+			<a href={% url 'pastebox:detail' post.url %}> {{post.name}} </a>
+			<br>
+			Date of expiry: {{post.date}}
+			<br>
+			{{post.content}}
+		</p>	
 	{% endfor %}
 
-	{% if search_results.has_next %}
-		<a href="?page={{search_results.next_page_number}}">&raquo;</a>
+	{% if search_results.has_other_pages %}
+		{% if search_results.has_previous %}
+			<a href="?page={{search_results.previous_page_number}}">&laquo;</a>
+		{% endif %}
+		
+		{% for i in search_results.paginator.page_range %}
+			{% if search_results.number == i %}
+				{{i}}
+			{% else %}
+				<a href="?page={{i}}">{{i}}</a>
+			{% endif %}
+		{% endfor %}
+
+		{% if search_results.has_next %}
+			<a href="?page={{search_results.next_page_number}}">&raquo;</a>
+		{% endif %}
 	{% endif %}
-{% endif %}
+</body>

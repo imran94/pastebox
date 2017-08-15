@@ -3,16 +3,18 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.utils import timezone
 
 import datetime
 from random import randint, choice
 from string import ascii_lowercase, ascii_uppercase
+from re import split
+
+from user_agents import parse
 
 from .models import Post
 
 def index(request):
-	print(request.META['HTTP_HOST'])
-
 	# Delete any existing posts if they are past expiry
 	for p in Post.objects.all():
 		if p.date and p.date <= datetime.date.today():
@@ -41,16 +43,29 @@ def index(request):
 def detail(request, post_url):
 	post = Post.objects.get(url=post_url)
 	post.views += 1
+
+	# Retrieve user data
+	user_data = split('\s\/\s', str(request.user_agent))
+
+	# Save user data
+	post.analytics_set.create(
+		device=user_data[0],
+		os=user_data[1],
+		browser=user_data[2],
+		ip_address=request.META['REMOTE_ADDR'],
+		pub_date=timezone.now()
+	)
 	# post = get_object_or_404(Post, pk=post_url)
-	return render(request, 'pastebox/detail.html', {'post': post})
+	analytics = post.analytics_set.order_by('-pub_date')[:10]
+
+	return render(request, 'pastebox/detail.html', {'post' : post, 'analytics' : analytics})
 
 
 def save(request):
-	#Generate unique URL for new post
+	# Generate unique URL of 8 alphanumeric characters
 	customURL = ''		
-
 	while True:
-		for i in range(0,6):
+		for i in range(0,8):
 			n = randint(0,2)
 			if n == 0:
 				customURL += str(randint(0,9))
@@ -66,6 +81,7 @@ def save(request):
 		else:
 			customURL = ''
 
+	# Create new post
 	p = Post(
 		name = request.POST['name'], 
 		content = request.POST['content'], 
@@ -102,5 +118,9 @@ def search(request):
 	except EmptyPage:
 		search_results = paginator.page(paginator.num_pages)
 
-	context = { 'search_term' : search_term, 'search_results' : search_results, 'result_count' : result_count}
+	context = { 
+		'search_term' : search_term, 
+		'search_results' : search_results, 
+		'result_count' : result_count
+	}
 	return render(request, 'pastebox/search.html', context)

@@ -1,63 +1,70 @@
-<h3>New Post</h3>
+<head>
+	<title>Pastebox: Index</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 
-<form action="{% url 'pastebox:save' %}" method="post">
-{% csrf_token %}
-	<p>
-		<label>Name:	
-			<input type="text" name="name" required>
-		</label>
-	</p>
+<body>
+	<h3>New Post</h3>
 
-	<p>
-		<label>Content: <br>
-			<textarea rows="10" cols="50" name="content" required></textarea>
-		</label>
-	</p>
+	<form action="{% url 'pastebox:save' %}" method="post">
+	{% csrf_token %}
+		<p>
+			<label>Name:	
+				<input type="text" name="name" required>
+			</label>
+		</p>
 
-	<p>
-		<label>
-			Date of Expiry: <input type="date" name="date" min={{date_tomorrow}}>
-		</label>
-	</p>
-<input type="submit" value="Create New Post" />
-</form>
+		<p>
+			<label>Content: <br>
+				<textarea rows="10" cols="50" name="content" required></textarea>
+			</label>
+		</p>
 
-<h3>Search</h3>
-<form action="{% url 'pastebox:search' %}" method="get">
-	<p>
-		<input type="text" name="searchbox" required />
-		<input type="submit" />
-	</p>
-</form>
+		<p>
+			<label>
+				Date of Expiry: <input type="date" name="date" min={{date_tomorrow}}>
+			</label>
+		</p>
+	<input type="submit" value="Create New Post" />
+	</form>
 
-<h3>Other Posts</h3>
-<table border="1">
-	<tr>
-		<th>Name</th>
-		<th>Date of Expiry</th>
-	</tr>
-	{% for p in posts %}
+	<h3>Search</h3>
+	<form action="{% url 'pastebox:search' %}" method="get">
+		<p>
+			<input type="text" name="searchbox" required />
+			<input type="submit" />
+		</p>
+	</form>
+
+	<h3>Other Posts</h3>
+	<table border="1">
 		<tr>
-			<td><a href={% url 'pastebox:detail' p.url %}> {{p.name}} </a></td>
-			<td>{{p.date}}</td>
+			<th>Name</th>
+			<th>Date of Expiry</th>
 		</tr>
-	{% endfor %}
-</table>
+		{% for p in posts %}
+			<tr>
+				<td><a href={% url 'pastebox:detail' p.url %}> {{p.name}} </a></td>
+				<td>{{p.date}}</td>
+			</tr>
+		{% endfor %}
+	</table>
 
-{% if posts.has_other_pages %}
-	{% if posts.has_previous %}
-		<a href="?page={{posts.previous_page_number}}">&laquo;</a>
-	{% endif %}
-	
-	{% for i in posts.paginator.page_range %}
-		{% if posts.number == i %}
-			{{i}}
-		{% else %}
-			<a href="?page={{i}}">{{i}}</a>
+	{% if posts.has_other_pages %}
+		{% if posts.has_previous %}
+			<a href="?page={{posts.previous_page_number}}">&laquo;</a>
 		{% endif %}
-	{% endfor %}
+		
+		{% for i in posts.paginator.page_range %}
+			{% if posts.number == i %}
+				{{i}}
+			{% else %}
+				<a href="?page={{i}}">{{i}}</a>
+			{% endif %}
+		{% endfor %}
 
-	{% if posts.has_next %}
-		<a href="?page={{posts.next_page_number}}">&raquo;</a>
+		{% if posts.has_next %}
+			<a href="?page={{posts.next_page_number}}">&raquo;</a>
+		{% endif %}
 	{% endif %}
-{% endif %}
+</body>

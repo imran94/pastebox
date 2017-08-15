@@ -1,4 +1,9 @@
-<h3> {{post.name}} </h3>
+<head>
+	<title>{{post.name}}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<h2> {{post.name}} </h2>
 
 <p>
 	{{post.content}}
@@ -10,5 +15,22 @@
 
 <a href="{% url 'pastebox:delete' post.url %}">Delete Post</a>
 
-<h3>Analytics</h3>
-<p>Views: {{post.views}}</p>
+<h2>Analytics</h2>
+
+<h3>Total Views: {{post.views}} </h3> 
+
+<h3>Past 10 Visitors</h3>
+
+{% for user_data in analytics %}
+	<p>
+		<strong>Browser:</strong> {{user_data.browser}}
+		<br>
+		<strong>Device:</strong> {{user_data.device}}
+		<br>
+		<strong>OS:</strong> {{user_data.os}}
+		<br>
+		<strong>IP Address:</strong> {{user_data.ip_address}}
+		<br>
+		<strong>Date and Time:</strong> {{user_data.pub_date}}
+	</p>
+{% endfor %}

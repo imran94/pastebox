@@ -5,3 +5,12 @@ python manage.py makemigrations [],
 python manage.py sqlmigrate [] 0001
 python manage.py check
 4. Register namespace
+
+For mobile:
+-Add local IP to ALLOWED_HOSTS
+-python manage.py runserver [localip]:8000
+
+Things to install:
+-pip install pyyaml ua-parser user-agents
+-pip install django-user-agents
+-pip install python-memcached
