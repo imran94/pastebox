@@ -1,7 +1,19 @@
-<form action="" method="get">
+<h3>Search</h3>
+<form action="{% url 'pastebox:search' %}" method="get">
 	<p>
 		<input type="text" name="searchbox" value={{ search_term }} required>
-		<input type="submit" value="Search" />
+		<input type="submit" />
 	</p>
 </form>
 
+Results found: {{search_results.count}}
+
+{% for post in search_results %}
+	<p>
+		<a href={% url 'pastebox:detail' post.url %}> {{post.name}} </a>
+		<br>
+		Date of expiry: {{post.date}}
+		<br>
+		{{post.content}}
+	</p>	
+{% endfor %}

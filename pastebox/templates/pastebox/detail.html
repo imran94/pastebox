@@ -1,9 +1,7 @@
-<p>
-	Name: {{post.name}}
-</p>
+<h3> {{post.name}} </h3>
 
 <p>
-	Content: {{post.content}}
+	{{post.content}}
 </p>
 
 <p>
@@ -11,3 +9,6 @@
 </p>
 
 <a href="{% url 'pastebox:delete' post.url %}">Delete Post</a>
+
+<h3>Analytics</h3>
+<p>Views: {{post.views}}</p>
