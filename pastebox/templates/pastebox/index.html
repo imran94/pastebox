@@ -1,0 +1,45 @@
+<h3>New Post</h3>
+
+<form action="{% url 'pastebox:save' %}" method="post">
+{% csrf_token %}
+	<p>
+		<label>Name:	
+			<input type="text" name="name" required>
+		</label>
+	</p>
+
+	<p>
+		<label>Content: 
+			<textarea rows="10" cols="50" name="content" required></textarea>
+		</label>
+	</p>
+
+	<p>
+		<label>
+			Date of Expiry: <input type="date" name="date" min={{date_tomorrow}}>
+		</label>
+	</p>
+<input type="submit" value="Create New Post" />
+</form>
+
+<form action="{% url 'pastebox:search' %}" method="get">
+	<p>
+		<input type="text" name="searchbox" required />
+		<input type="submit" value="Search" />
+	</p>
+</form>
+
+<h3>All posts</h3>
+<table border="1">
+	<tr>
+		<th>Name</th>
+		<th>Date of Expiry</th>
+	</tr>
+	{% for p in all_posts %}
+		<tr>
+			<td><a href={% url 'pastebox:detail' p.url %}> {{p.name}} </a></td>
+			<td>{{p.date}}</td>
+		</tr>
+	{% endfor %}
+</table>
+

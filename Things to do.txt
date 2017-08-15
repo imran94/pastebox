@@ -1,0 +1,7 @@
+1. python manage.py startapp []
+2. mysite/settings.py - Add app config in INSTALLED_APPS
+3. After making models - python manage.py migrate,
+python manage.py makemigrations [],
+python manage.py sqlmigrate [] 0001
+python manage.py check
+4. Register namespace

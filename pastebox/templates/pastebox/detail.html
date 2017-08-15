@@ -1,0 +1,13 @@
+<p>
+	Name: {{post.name}}
+</p>
+
+<p>
+	Content: {{post.content}}
+</p>
+
+<p>
+	Date of Expiry: {{post.date}}
+</p>
+
+<a href="{% url 'pastebox:delete' post.url %}">Delete Post</a>
