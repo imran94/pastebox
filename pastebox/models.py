@@ -7,6 +7,7 @@ class Post(models.Model):
 	content = models.TextField()
 	date = models.DateField(default=None, blank=True, null=True)
 	url = models.CharField(max_length=5, default=None, blank=True, null=True)
+	views = models.IntegerField(default=0)
 
 	def __str__(self):
 		return self.name
