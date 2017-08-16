@@ -5,7 +5,9 @@ To run, you must have Django installed, along with additional packages, which ca
 
 The addition packages can be installed with the following commands:
 > pip install pyyaml ua-parser user-agents
+
 > pip install django-user-agents
+
 > pip install python-memcached
 
 
