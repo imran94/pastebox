@@ -8,4 +8,5 @@ The addition packages can be installed with the following commands:
 > pip install django-user-agents
 > pip install python-memcached
 
+
 Run the program by navigating to the root folder and typing 'python manage.py runserver' then entering '127.0.0.1:8000/pastebox' in the browser 
